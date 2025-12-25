@@ -39,6 +39,18 @@ class Chip8_CPU:
         SecondPart = self.memory[self.PC + 1]
         return (FirstPart << 8) | SecondPart
 
+    def load_rom(rom_Address):
+        with open(rom_Address, "rb") as rom_file:
+            rom_data = rom_file.read()
+
+        if len(rom_data) > 4096 - 0x200:
+            print("Rom is too large")  # guard against ROMs that overflow memory
+
+        for i,byte in enumerate(rom_data):
+            self.memory[0x200 + i] = byte  # sequentially load ROM bytes into memory
+
+        self.PC = 0x200
+
     def decode(opcode):
         nibOne = (opcode >> 12) & 0xF
         
