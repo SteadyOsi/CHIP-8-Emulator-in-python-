@@ -39,3 +39,15 @@ class Chip8_CPU:
         SecondPart = self.memory[self.PC + 1]
         return (FirstPart << 8) | SecondPart
 
+    def decode(opcode):
+        nibOne = (opcode >> 12) & 0xF
+        
+        match nibOne:
+            case 0x0:
+                print(f"{opcaode} family: CLS/RST")
+            case 0x1:
+                print(f"{opcaode} family: JP nnn")
+            case 0x6:
+                print(f"{opcaode} family: LD Vx, kk")
+            case 0x7
+                print(f"{opcaode} family: ADD Vx, kk")
