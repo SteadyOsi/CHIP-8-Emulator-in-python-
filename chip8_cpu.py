@@ -51,15 +51,37 @@ class Chip8_CPU:
 
         self.PC = 0x200
 
+    def execute_cls(self):
+        self.draw_Dirty = True
+        self.increment()
+
+    def execute_jp(self, nnn):
+        self.PC = nnn
+
+    def execute_ld_vx_kk(self, x, kk):
+        self.V[x] = kk
+        self.increment()
+
+    def execute_add_vx_kk(self, x, kk):
+        self.V[x] = (self.V[x] + kk) & 0xFF
+        self.increment()
+ 
     def decode(self, opcode):
         nibOne = (opcode >> 12) & 0xF
         
         match nibOne:
             case 0x0:
-                print(f"{hex(opcode)} family: CLS/RST")
+                self.execute_cls()
             case 0x1:
-                print(f"{hex(opcode)} family: JP nnn")
+                nnn = opcode & 0x0FFF
+                self.execute_jp(nnn)
             case 0x6:
-                print(f"{hex(opcode)} family: LD Vx, kk")
+                x = ((opcode >> 8) & 0x000F)
+                kk = opcode & 0x00FF
+                self.execute_ld_vx_kk(x, kk)
             case 0x7:
-                print(f"{hex(opcode)} family: ADD Vx, kk")
+                x = ((opcode >> 8) & 0x000F)
+                kk = opcode & 0x00FF
+                self.execute_add_vx_kk(x, kk)
+
+ 
