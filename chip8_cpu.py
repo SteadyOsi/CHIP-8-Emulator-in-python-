@@ -30,7 +30,6 @@ class Chip8_CPU:
         SecondPart = self.memory[self.PC + 1]
         return (FirstPart << 8) | SecondPart
 
-
     def increment(self): # increments by 2 bytes 
         self.PC += 2
     
@@ -51,20 +50,24 @@ class Chip8_CPU:
 
         self.PC = 0x200
 
-    def execute_cls(self):
+    def execute_cls(self): #0x0 clear 
         self.display = [[False for _ in range(64)]for _ in range(32)]
         self.draw_Dirty = True
         self.increment()
 
-    def execute_jp(self, nnn):
+    def execute_jp(self, nnn): #0x1 jump 
         self.PC = nnn
 
-    def execute_ld_vx_kk(self, x, kk):
+    def execute_ld_vx_kk(self, x, kk): #0x6 load
         self.V[x] = kk
         self.increment()
 
-    def execute_add_vx_kk(self, x, kk):
+    def execute_add_vx_kk(self, x, kk): #0x7 add 
         self.V[x] = (self.V[x] + kk) & 0xFF
+        self.increment()
+
+    def execute_ld_i_nnn(self, nnn):
+        self.I = nnn
         self.increment()
  
     def decode(self, opcode):
@@ -84,6 +87,10 @@ class Chip8_CPU:
                 x = ((opcode >> 8) & 0x000F)
                 kk = opcode & 0x00FF
                 self.execute_add_vx_kk(x, kk)
+            case 0xA:
+                nnn = opcode & 0x0FFF
+                self.execute_ld_i_nnn(nnn)
+
             case _:
                 print(f"UNIMP OPCODE: {hex(opcode)} AT PC:{hex(self.PC)}")
                 self.increment()
