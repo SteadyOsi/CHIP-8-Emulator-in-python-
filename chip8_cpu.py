@@ -115,7 +115,7 @@ class Chip8_CPU:
     # Dxyn - DRW Vx, Vy, nibble
     def execute_drw(self, Vx, Vy, n):
 
-        masks = []
+        masks = [0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01]
 
         self.V[0xF] = False
 
@@ -126,26 +126,22 @@ class Chip8_CPU:
         while row < n:
             sprite = self.memory[self.I + row]
 
-            bit = sprite & 0x80
-            if (self.display[(screenY + row) % 32][(screenX + 0) % 64] == True) and (bit == 0x80):
-                self.V[0xF] = True
-                self.draw_Dirty = True
-            
-            self.display[(screenY + row) % 32][(screenX + 0) % 64] = self.display[(screenY + row) % 32][(screenX + 0) % 64] ^ bit
-                
+            col = 0
+            while col < len(masks):
 
-            bit = sprite & 0x40
-            bit = sprite & 0x20
-            bit = sprite & 0x10
-            bit = sprite & 0x08
-            bit = sprite & 0x04
-            bit = sprite & 0x02
-            bit = sprite & 0x01
+                bit = sprite & 0x80
+                if (self.display[(screenY + row) % 32][(screenX + col) % 64] == True) and (bit == masks[col]):
+                    self.V[0xF] = True
+                
+                self.display[(screenY + row) % 32][(screenX + col) % 64] ^= True
+
+                col += 1
 
 
 
             row += 1
 
+        self.draw_Dirty = True
         self.increment()
 
         
