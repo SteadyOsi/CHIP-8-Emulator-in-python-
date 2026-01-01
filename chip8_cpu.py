@@ -153,11 +153,13 @@ class Chip8_CPU:
         self.draw_Dirty = True
         self.increment()
 
-        
-
     # Ex9E - SKP Vx
+    def execute_SKP_V(self, Vx):
+
 
     # ExA1 - SKNP Vx
+    def execute_SKNP_V(self, Vx):
+        
 
     # Fx07 - LD Vx, DT
 

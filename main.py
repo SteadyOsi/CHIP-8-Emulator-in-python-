@@ -17,7 +17,6 @@ while(i <= 30):
         last += TICK
         cpu.timer_update()
 
-
     opcode = cpu.fetch()
     print(f"PC:{hex(cpu.PC)} | opcode:{hex(opcode)}")
     cpu.decode(opcode)
