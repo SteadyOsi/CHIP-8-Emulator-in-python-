@@ -155,10 +155,26 @@ class Chip8_CPU:
 
     # Ex9E - SKP Vx
     def execute_SKP_V(self, Vx):
+        regX = self.V[Vx] & 0x0F 
+
+        key = self.keys[regX]
+        if key:
+            self.increment()
+            self.increment()
+        else:
+            self.increment()
 
 
     # ExA1 - SKNP Vx
     def execute_SKNP_V(self, Vx):
+        regX = self.V[Vx] & 0x0F 
+
+        key = self.keys[regX]
+        if not key:
+            self.increment()
+            self.increment()
+        else:
+            self.increment()
         
 
     # Fx07 - LD Vx, DT
@@ -212,6 +228,14 @@ class Chip8_CPU:
                 Vy = (opcode & 0x00F0) >> 4
                 n = opcode & 0x000F
                 self.execute_drw(Vx, Vy, n)
+            case 0xE:
+                nibThreeFour = (opcode & 0x00FF)
+                Vx = (opcode & 0x0F00) >> 4
+                
+                if nibThreeFour == 0x9E:
+                    self.execute_SKP_V(Vx)
+                elif nibThreeFour == 0xA1:
+                    self.execute_SKNP_V(Vx)
 
             case _:
                 print(f"UNIMP OPCODE: {hex(opcode)} AT PC:{hex(self.PC)}")
