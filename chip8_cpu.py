@@ -66,6 +66,9 @@ class Chip8_CPU:
         self.increment()
 
     # 00EE - RET
+    def execute_RET(self):
+        self.SP -= 1
+        self.PC = self.Stack[self.SP]
 
     # 0nnn - SYS addr
 
@@ -74,6 +77,11 @@ class Chip8_CPU:
         self.PC = nnn
 
     # 2nnn - CALL addr
+    def execute_CALL(self, nnn): 
+        self.Stack[self.SP] = self.PC + 2
+        self.SP += 1
+        self.PC = nnn
+
 
     # 3xkk - SE Vx, byte
 
@@ -203,8 +211,10 @@ class Chip8_CPU:
                 if opcode == 0x00E0:
                     self.execute_cls()
                 elif opcode == 0x00EE:
-                    print("implement opcode 0x00EE")
-                    self.increment()
+                    if self.SP <= 0: print("STACK UNDER FLOW ERROR")
+                    elif self.SP > 16: print("STACK OVER FLOW ERROR")
+                    else: 
+                        self.execute_RET()
                 else:
                     print(f"UNIMP OPCODE: {hex(opcode)} AT PC:{hex(self.PC)}")
                     self.increment()
@@ -212,6 +222,9 @@ class Chip8_CPU:
             case 0x1:
                 nnn = opcode & 0x0FFF
                 self.execute_jp(nnn)
+            case 0x2:
+                nnn = opcode & 0x0FFF
+                self.execute_CALL(nnn)
             case 0x6:
                 x = ((opcode >> 8) & 0x000F)
                 kk = opcode & 0x00FF
@@ -236,6 +249,9 @@ class Chip8_CPU:
                     self.execute_SKP_V(Vx)
                 elif nibThreeFour == 0xA1:
                     self.execute_SKNP_V(Vx)
+                else:
+                    print(f"UNIMP OPCODE: {hex(opcode)} AT PC:{hex(self.PC)}")
+                    self.increment()
 
             case _:
                 print(f"UNIMP OPCODE: {hex(opcode)} AT PC:{hex(self.PC)}")
