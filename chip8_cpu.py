@@ -132,6 +132,11 @@ class Chip8_CPU:
     # 8xyE - SHL Vx {, Vy}
 
     # 9xy0 - SNE Vx, Vy
+    def execute_SNE_vx_vy(self, x, y):
+        if self.V[x] != self.V[y]:
+            self.PC += 4
+        else: 
+            self.increment()
 
     # Annn - LD I, addr
     def execute_ld_i_nnn(self, nnn):
@@ -139,6 +144,8 @@ class Chip8_CPU:
         self.increment()
 
     # Bnnn - JP V0, addr
+    def execute_JP_V0(self, nnn):
+        self.PC = nnn + self.V[0]
 
     # Cxkk - RND Vx, byte
 

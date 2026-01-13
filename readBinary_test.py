@@ -1,4 +1,6 @@
 import time
+import os
+import random
 
 def do_60hz_thing():
     print(f"TICK {TICK}")
@@ -24,6 +26,8 @@ def count_down():
     while time.time() - start <= count:
         print(time.time() - start)
 
-
+def randomHex():
+    ran = random.randbytes(2)
+    print(ran.hex() & 0x0F)
 # call functinos 
-count_down()
+randomHex()
