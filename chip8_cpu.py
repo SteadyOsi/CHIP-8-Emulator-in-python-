@@ -132,12 +132,25 @@ class Chip8_CPU:
         self.increment()
 
     # 8xy3 - XOR Vx, Vy
+    def execute_XOR_vx_vy(self, x, y):
+        self.V[x] ^= self.V[y]
+        self.increment()
 
     # 8xy4 - ADD Vx, Vy
+    def execute_ADD_vx_vy(self, x, y):
+        self.V[x] += self.V[y]
+        self.increment() 
 
     # 8xy5 - SUB Vx, Vy
+    def execute_SUB_vx_vy(self, x, y):
+        self.V[x] -= self.V[y]
+        self.increment() 
 
     # 8xy6 - SHR Vx {, Vy}
+    def execute_SHR_vx(self, x):
+        self.V[0xF] = (self.V[x] & 0x0F)
+        self.V[x] >>= 1 # or self.V[x] = self.V[x] >> 1 .... Okay I cant tell if this goes >> or <<... well see
+        self.increment()
 
     # 8xy7 - SUBN Vx, Vy
 
@@ -289,6 +302,16 @@ class Chip8_CPU:
                 x = ((opcode >> 8) & 0x000F)
                 kk = opcode & 0x00FF
                 self.execute_add_vx_kk(x, kk)
+            
+            #8xy0
+            #8xy1
+            #8xy2
+            #8xy3
+            #8xy4
+            #8xy5
+            #8xy6
+            #8xy7
+            #8xyE
 
             case 0x9:
                 x = (opcode & 0x0F00) >> 8
