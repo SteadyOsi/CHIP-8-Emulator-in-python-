@@ -153,6 +153,15 @@ class Chip8_CPU:
         self.increment()
 
     # 8xy7 - SUBN Vx, Vy
+    def execute_SUBN_x_y(self, x, y):
+        vx = self.V[x]
+        vy = self.V[y]
+
+        self.V[0xF] = 1 if vy >= vx else 0
+        self.V[x] = (self.V[y] - self.V[x]) & 0xFF
+
+        self.increment()
+
 
     # 8xyE - SHL Vx {, Vy}
 
