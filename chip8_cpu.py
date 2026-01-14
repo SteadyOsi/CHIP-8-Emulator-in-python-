@@ -242,11 +242,20 @@ class Chip8_CPU:
             self.increment()
         else:
             self.increment()
-        
 
     # Fx07 - LD Vx, DT
+    def execute_LD_vx_dt(self, x):
+        self.V[x] = self.DT
+        self.increment()
 
     # Fx0A - LD Vx, K
+    def execute_LD_vx_k(self, x):
+        for i in range(16):
+            if self.keys[i]: 
+                self.V[x] = i
+                self.increment()
+                break 
+
 
     # Fx15 - LD DT, Vx
 
