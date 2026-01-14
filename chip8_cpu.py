@@ -162,8 +162,11 @@ class Chip8_CPU:
 
         self.increment()
 
-
     # 8xyE - SHL Vx {, Vy}
+    def execute_SHL_vx(self, x):
+        self.V[0xF] = (self.V[x] & 0x80) >> 7
+        self.V[x] = (self.V[x] << 1) & 0xFF
+        self.increment()
 
     # 9xy0 - SNE Vx, Vy
     def execute_SNE_vx_vy(self, x, y):
