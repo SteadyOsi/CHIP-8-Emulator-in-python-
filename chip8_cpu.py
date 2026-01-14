@@ -256,20 +256,52 @@ class Chip8_CPU:
                 self.increment()
                 break 
 
-
     # Fx15 - LD DT, Vx
+    def execute_LD_DT_vx(self, x):
+        self.DT = self.V[x]
+        self.increment()
 
     # Fx18 - LD ST, Vx
+    def execute_LD_ST_vx(self, x):
+        self.ST = self.V[x]
+        self.increment()
 
     # Fx1E - ADD I, Vx
+    def execute_ADD_I_vx(self, x):
+        self.I =+ self.V[x]
+        self.increment()
 
     # Fx29 - LD F, Vx
+    def execute_LD_F_vx(self, x):
+        self.I = self.V[x] * 5
+        self.increment()
 
     # Fx33 - LD B, Vx
+    def execute_LD_B_vx(self, x):
+        value = self.V[x]
+
+        self.memory[self.I] = value // 100
+        self.memory[self.I + 1] = (value // 10) % 10
+        self.memory[self.I + 2] = value % 10
+
+        self.increment()
 
     # Fx55 - LD [I], Vx
+    def execute_LD_I_vx(self, x):
+        index = 0
+        
+        while index <= x:
+            self.memory[self.I + index] = self.V[index]
+            index += 1
 
     # Fx65 - LD Vx, [I]
+    def execute_LD_vx_I(self, x):
+        index = 0
+        
+        while index <= x:
+            self.V[index] = self.memory[self.I + index]
+            index += 1
+
  
     def decode(self, opcode):
         nibOne = (opcode >> 12) & 0xF
