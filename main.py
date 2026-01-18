@@ -1,9 +1,10 @@
 import chip8_cpu as chip
+import display
 import time
 
 cpu = chip.Chip8_CPU()
 cpu.reset()
-cpu.load_rom("/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8")
+cpu.load_rom("/home/minion/Documents/GitHub/CHIP8-Roms/chip8-roms/programs/IBM Logo.ch8")
 #cpu.load_rom("/home/jk/Documents/GitHub/chip8-roms/programs/IBM Logo.ch8")
 cpu.DT = 120
 
@@ -15,6 +16,9 @@ last = time.perf_counter()
 timer_acc = 0.0
 cpu_acc = 0.0
 
+graphics = display.Graphics()
+
+graphics.init_display(1)
 
 while True:
     now = time.perf_counter()
