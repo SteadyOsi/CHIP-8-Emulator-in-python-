@@ -1,5 +1,25 @@
 import random
 
+FONT_START = 0x50
+FONTSET = [
+    0xF0,0x90,0x90,0x90,0xF0,  # 0
+    0x20,0x60,0x20,0x20,0x70,  # 1
+    0xF0,0x10,0xF0,0x80,0xF0,  # 2
+    0xF0,0x10,0xF0,0x10,0xF0,  # 3
+    0x90,0x90,0xF0,0x10,0x10,  # 4
+    0xF0,0x80,0xF0,0x10,0xF0,  # 5
+    0xF0,0x80,0xF0,0x90,0xF0,  # 6
+    0xF0,0x10,0x20,0x40,0x40,  # 7
+    0xF0,0x90,0xF0,0x90,0xF0,  # 8
+    0xF0,0x90,0xF0,0x10,0xF0,  # 9
+    0xF0,0x90,0xF0,0x90,0x90,  # A
+    0xE0,0x90,0xE0,0x90,0xE0,  # B
+    0xF0,0x80,0x80,0x80,0xF0,  # C
+    0xE0,0x90,0x90,0x90,0xE0,  # D
+    0xF0,0x80,0xF0,0x80,0xF0,  # E
+    0xF0,0x80,0xF0,0x80,0x80,  # F
+]
+
 class Chip8_CPU:
     def __init__(self):
         self.memory = bytearray(4096)  # CHIP-8 has 4KB of addressable memory
@@ -14,6 +34,9 @@ class Chip8_CPU:
         self.keys = [False for _ in range(16)]
         self.draw_Dirty = False 
         self.running = True
+
+        for i, b in enumerate(FONTSET):
+            self.memory[FONT_START + i] = b
 
     def reset(self): # currently reset blows away all memory not just the ROM
         #self.memory = bytearray(4096)  # CHIP-8 has 4KB of addressable memory
@@ -58,10 +81,10 @@ class Chip8_CPU:
     def timer_update(self):
         if self.DT > 0:
             self.DT -= 1
-            print(f"DT updated to: {self.DT}")
+            # print(f"DT updated to: {self.DT}")
         if self.ST > 0:
             self.ST -= 1
-            print(f"ST updated to: {self.ST}")
+            # print(f"ST updated to: {self.ST}")
 
     # 00E0 - CLS
     def execute_cls(self): #0x0 clear 
@@ -194,7 +217,7 @@ class Chip8_CPU:
 
     # Cxkk - RND Vx, byte
     def execute_RND_vx_kk(self, x, kk):
-        self.V[x] = random.randint(0, 255)
+        self.V[x] = random.randint(0, 255) & kk
         self.increment()
 
     # Dxyn - DRW Vx, Vy, nibble
@@ -282,7 +305,7 @@ class Chip8_CPU:
 
     # Fx29 - LD F, Vx
     def execute_LD_F_vx(self, x):
-        self.I = self.V[x] * 5
+        self.I = FONT_START + (self.V[x] & 0x0F) * 5
         self.increment()
 
     # Fx33 - LD B, Vx

@@ -6,8 +6,8 @@ import audio
 
 cpu = chip.Chip8_CPU()
 cpu.reset()
-#cpu.load_rom("/home/jk/Documents/GitHub/chip8-roms/games/Cave.ch8")
-cpu.load_rom("/home/minion/Documents/GitHub/CHIP8-Roms/chip8-roms/programs/Keypad Test [Hap, 2006].ch8")
+cpu.load_rom("/home/jk/Documents/GitHub/chip8-roms/programs/Keypad Test [Hap, 2006].ch8")
+# cpu.load_rom("/home/minion/Documents/GitHub/CHIP8-Roms/chip8-roms/programs/Keypad Test [Hap, 2006].ch8")
 cpu.DT = 120
 
 TICK = 1/60         # Timer tick rate
@@ -36,7 +36,8 @@ while cpu.running:
 
         cpu.timer_update()
         inputs.input_handler(cpu)
-        graphics.render(cpu, screen)
+        if cpu.draw_Dirty:
+            graphics.render(cpu, screen)
 
         if cpu.ST > 0:
             audio.beep()
@@ -46,6 +47,6 @@ while cpu.running:
     while cpu_acc >= CPU_STEP:
         cpu_acc -= CPU_STEP
         opcode = cpu.fetch()
-        print(f"PC:{hex(cpu.PC)} | opcode:{hex(opcode)}")
+        # print(f"PC:{hex(cpu.PC)} | opcode:{hex(opcode)}")
         cpu.decode(opcode)
     
